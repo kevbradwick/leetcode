@@ -1,4 +1,4 @@
-def roman_integer(input: str) -> int:
+def roman_integer(s: str) -> int:
     """
     Given a roman numeral, convert it to an integer.
 
@@ -25,23 +25,13 @@ def roman_integer(input: str) -> int:
         "M": 1000,
     }
     total = 0
-    skip = False
 
-    for i, c in enumerate(input):
-        if skip:
-            skip = False
-            continue
-
-        prev_num = input[i - 1] if i > 0 else None
-        next_num = input[i + 1] if i < len(input) - 1 else None
-
-        # check if previous number is equal or greater than current number
-        if prev_num and numbers[prev_num] <= numbers[c]:
-            total += numbers[c]
-        elif next_num and numbers[next_num] > numbers[c]:
-            total += numbers[next_num] - numbers[c]
-            skip = True
+    # iterate over a window of two characters, shifting the window by one
+    # if the first character is less than the second, subtract it from the total
+    # otherwise, add it to the total. finally, add the last character to the total
+    for a, b in zip(s, s[1:]):
+        if numbers[a] < numbers[b]:
+            total -= numbers[a]
         else:
-            total += numbers[c]
-
-    return total
+            total += numbers[a]
+    return total + numbers[s[-1]]
